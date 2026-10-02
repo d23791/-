@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>升私中自然科素養模擬線上測驗</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts Inter / Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-indigo-50/30 to-blue-50/50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50 shadow-xs">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-200">🔬</div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">升私中自然科素養模擬測驗</h1>
+                    <p class="text-xs text-slate-500">國小五、六年級跨領域生活情境與實驗題型</p>
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center gap-2">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                    共 25 題精選
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-3xl w-full mx-auto px-4 py-8 sm:py-12">
+
+        <!-- Welcome / Start Screen -->
+        <div id="start-screen" class="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8 sm:p-12 text-center relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-48 h-48 bg-indigo-50 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-blue-50 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-xl mx-auto space-y-6">
+                <div class="w-20 h-20 bg-gradient-to-tr from-indigo-600 to-violet-600 text-white rounded-3xl flex items-center justify-center mx-auto shadow-lg shadow-indigo-200 text-3xl transform hover:rotate-6 transition-transform">
+                    🌟
+                </div>
+                <div class="space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">頂尖私中入學模擬挑戰</h2>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        本測驗依據私校入學命題趨勢編寫，納入大量<span class="text-indigo-600 font-bold">生活情境、實驗操作數據判讀與跨領域素養題型</span>，全方位檢測孩子的自然科學實力。
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-left py-2">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <div class="text-xs text-slate-400 font-medium">題數總計</div>
+                        <div class="text-sm font-bold text-slate-800">25 道選擇題</div>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <div class="text-xs text-slate-400 font-medium">測驗範圍</div>
+                        <div class="text-sm font-bold text-slate-800">小五、小六全範圍</div>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <div class="text-xs text-slate-400 font-medium">核心特色</div>
+                        <div class="text-sm font-bold text-slate-800">即時解析與錯題複習</div>
+                    </div>
+                </div>
+
+                <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold py-4 px-8 rounded-2xl transition shadow-lg shadow-indigo-200 text-base cursor-pointer">
+                    立即開始測驗 🚀
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen (Hidden by default) -->
+        <div id="quiz-screen" class="hidden space-y-6">
+            <!-- Progress & Header -->
+            <div class="bg-white rounded-2xl p-4 sm:px-6 shadow-sm border border-slate-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="bg-indigo-50 text-indigo-700 font-bold text-xs sm:text-sm px-3 py-1 rounded-full border border-indigo-100">
+                        Q <span id="current-q-num">1</span> / 25
+                    </span>
+                    <span id="question-category" class="text-xs font-medium text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md">生物與生態</span>
+                </div>
+                <div class="w-32 sm:w-48 bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 transition-all duration-300 rounded-full" style="width: 4%;"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 sm:p-10 space-y-6">
+                <div id="question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">
+                    載入中...
+                </div>
+                <div id="options-container" class="space-y-3">
+                    <!-- Options injected via JS -->
+                </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex justify-between items-center pt-2">
+                <button id="prev-btn" onclick="prevQuestion()" class="px-6 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-medium text-sm transition disabled:opacity-30 disabled:cursor-not-allowed bg-white shadow-xs cursor-pointer">
+                    上一題
+                </button>
+                <button id="next-btn" onclick="nextQuestion()" class="px-8 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition shadow-md shadow-indigo-200 cursor-pointer">
+                    下一題
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen (Hidden by default) -->
+        <div id="result-screen" class="hidden space-y-6">
+            <!-- Score Summary Card -->
+            <div class="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-8 sm:p-10 text-center relative overflow-hidden">
+                <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg shadow-emerald-100">🏆</div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1">測驗圓滿完成！</h2>
+                <p class="text-sm text-slate-500 mb-6">以下是您的升私中自然素養模擬測驗成績</p>
+                
+                <div class="inline-block bg-gradient-to-b from-slate-50 to-indigo-50/50 border border-slate-100 px-10 py-6 rounded-3xl mb-8 shadow-inner">
+                    <div class="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">百分制總分</div>
+                    <div class="text-5xl sm:text-6xl font-black text-indigo-600"><span id="final-score">0</span> <span class="text-2xl font-normal text-slate-400">分</span></div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="restartQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-8 rounded-2xl transition shadow-lg shadow-indigo-200 text-sm cursor-pointer">
+                        重新測驗 🔄
+                    </button>
+                </div>
+            </div>
+
+            <!-- Wrong Answer Analysis Card -->
+            <div class="bg-white rounded-3xl shadow-xl shadow-slate-100 border border-slate-100 p-6 sm:p-10 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <span>📋</span> 錯題解析與觀念補強
+                    </h3>
+                    <span id="wrong-count-badge" class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-100 text-slate-600">錯題數：0 題</span>
+                </div>
+                <div id="analysis-container" class="space-y-4">
+                    <!-- Analysis injected via JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs text-slate-400">
+        升私中自然素養線上模擬系統 &copy; 2026
+    </footer>
+
+    <!-- Quiz Data & Logic Script -->
+    <script>
+        const questions = [
+            {
+                id: 1,
+                category: "生物與生態 (生活情境)",
+                question: "【素養題】小明在菜園觀察到高麗菜葉片上有許多小菜蛾的幼蟲啃食，同時他也發現了好幾隻瓢蟲在葉面上爬行。如果我們要描繪這座菜園中的「生物群集」與「食物網」，下列敘述何者正確？",
+                options: [
+                    "高麗菜是消費者，小菜蛾是生產者",
+                    "瓢蟲屬於捕食者，會吃小菜蛾幼蟲，兩者構成掠食關係",
+                    "只要把菜園裡的昆蟲全部殺光，高麗菜的生長一定會變得最好且生態永續",
+                    "陽光與土壤屬於生物群集的一部分"
+                ],
+                answer: 1,
+                analysis: "高麗菜為生產者，小菜蛾幼蟲為初級消費者（草食），瓢蟲為次級消費者（肉食），會捕食小菜蛾幼蟲。陽光與土壤屬於『非生物環境』，不屬於生物群集。生物多樣性對於生態平衡相當重要，並非全數殺光最好。"
+            },
+            {
+                id: 2,
+                category: "理化與實驗 (數據判讀)",
+                question: "【素養題】小華進行「固體溶解度與溫度關係」實驗，在 20℃ 與 60℃ 時分別測試某物質在 100 毫升水中的最大溶解量。實驗記錄顯示 20℃ 時可溶解 35 克，60℃ 時可溶解 85 克。若他在 60℃ 的水中加入 100 克該物質，攪拌後過濾，再將此飽和溶液從 60℃ 冷卻降溫至 20℃。請問降溫過程中會有多少克溶質沉澱出來？",
+                options: [
+                    "35 克",
+                    "50 克",
+                    "65 克",
+                    "85 克"
+                ],
+                answer: 1,
+                analysis: "在 60℃ 時最多可溶解 85 克（加入 100 克會完全溶解 85 克，剩 15 克未溶解）。當溫度從 60℃ 降到 20℃ 時，20℃ 的溶解度為 35 克，因此析出量 = 60℃溶解量 (85) - 20℃溶解量 (35) = 50 克。"
+            },
+            {
+                id: 3,
+                category: "地球科學 (生活應用)",
+                question: "【素養題】台灣位於板塊交界帶，地震頻繁。當氣象署發布強震即時警報時，通常會提醒民眾採取「趴下、掩護、穩住」的保命三步驟。請問台灣之所以地震頻繁，主要是因為哪兩個板塊相互碰撞擠壓？",
+                options: [
+                    "歐亞大陸板塊與太平洋板塊",
+                    "菲律賓海板塊與歐亞大陸板塊",
+                    "印澳板塊與美洲板塊",
+                    "非洲板塊與南極洲板塊"
+                ],
+                answer: 1,
+                analysis: "台灣地處『菲律賓海板塊』與『歐亞大陸板塊』的交界帶，兩個板塊持續相互擠壓碰撞，累積龐大能量，因此地震頻繁、多山岳。"
+            },
+            {
+                id: 4,
+                category: "生物與構造 (跨領域應用)",
+                question: "【素養題】近年來「仿生學（Biomimetics）」非常熱門，科學家觀察到『蒼蠅』的複眼結構，研發出能全方位監控的微型相機；又觀察到『蓮葉』表面的奈米微結構具有超強疏水與自潔能力。請問下列關於蓮葉效應的敘述，何者正確？",
+                options: [
+                    "水滴在蓮葉表面會展現極佳的展延性並完全浸潤葉面",
+                    "蓮葉表面容易沾染灰塵，需要人工定時擦拭才能保持乾淨",
+                    "水滴在蓮葉表面會形成近乎球狀的水珠，滾動時可順便帶走灰塵達到自潔效果",
+                    "蓮葉表面具有強力黏膠，能把所有落塵黏住"
+                ],
+                answer: 2,
+                analysis: "蓮葉表面佈滿微小的乳突及蠟質，水滴在上面因表面張力形成圓滾滾的水珠，當水珠滾動時會把葉面上的灰塵雜質一併帶走，這就是著名的「蓮葉效應（自潔能力）」。"
+            },
+            {
+                id: 5,
+                category: "理化與力學 (實驗操作)",
+                question: "【素養題】小明在進行「槓桿原理」實驗時，在槓桿左側距離支點 15 公分處掛了 4 個砝碼（每個 10 克）。若他想在右側距離支點 20 公分處懸掛砝碼使槓桿達到水平平衡，請問右側應該掛幾個相同的砝碼？",
+                options: [
+                    "2 個",
+                    "3 個",
+                    "4 個",
+                    "5 個"
+                ],
+                answer: 1,
+                analysis: "根據槓桿平衡原理：『施力 × 施力臂 = 抗力 × 抗力臂』。左側：4個砝碼 × 15公分 = 60（力矩單位）；右側：? 個砝碼 × 20公分 = 60，因此右側需掛 60 ÷ 20 = 3 個砝碼。"
+            },
+            {
+                id: 6,
+                category: "地球科學 (天體運行)",
+                question: "【素養題】小華在暑假期間到天文館參加觀星營隊，講師在解說月相時提到：「農曆每月的初八稱為上弦月，農曆十五稱為滿月。」請問當我們在農曆二十三左右的清晨（天亮前）面向南方天空觀察月亮時，最常看見下列哪一種月相？",
+                options: [
+                    "右半邊亮的半月（上弦月）",
+                    "圓形發光的滿月",
+                    "左半邊亮的半月（下弦月）",
+                    "完全看不見的月亮（新月）"
+                ],
+                answer: 2,
+                analysis: "農曆二十三左右為『下弦月』，特徵是半個月亮，亮部在左半邊（朝東半天空），通常在半夜升起、清晨位於南方天空。"
+            },
+            {
+                id: 7,
+                category: "生物與環境 (生態保育)",
+                question: "【素養題】外來種「綠鬣蜥」近年在台灣南部野外大量繁殖，對本土農作物及生態造成嚴重威脅。從生態學的角度來看，下列關於外來種造成危害的原因分析，何者最合理？",
+                options: [
+                    "外來種來到新環境後，通常缺乏天敵的控制，且適應力強，導致族群迅速擴張",
+                    "外來種會主動轉變成植物，增加生產者數量",
+                    "外來種進入生態系後會自動減少繁殖，與原生種和平共處",
+                    "外來種會替本土物種進行基因改良"
+                ],
+                answer: 0,
+                analysis: "外來入侵種之所以造成嚴重危害，主要是因為牠們在新的棲地中『缺乏天敵』抑制，且排擠原生種的生存空間與食物資源，導致族群數量失控。"
+            },
+            {
+                id: 8,
+                category: "理化與水溶液 (生活情境)",
+                question: "【素養題】媽媽在廚房準備晚餐時，不小心將整盤切好的洋蔥接觸到砧板上的檸檬汁，發現有些金屬器具沾到後產生了微弱的腐蝕。小明用石蕊試紙進行檢測，發現檸檬汁會使藍色石蕊試紙變紅色。下列關於檸檬汁水溶液的敘述，何者正確？",
+                options: [
+                    "屬於強鹼性水溶液，觸感滑潤",
+                    "屬於酸性水溶液，且 pH 值小於 7",
+                    "屬於中性水溶液，可用來滴定食鹽",
+                    "會使紅色石蕊試紙變成藍色"
+                ],
+                answer: 1,
+                analysis: "檸檬汁含有檸檬酸，屬於酸性水溶液，其 pH 值小於 7，會使藍色石蕊試紙變紅色。"
+            },
+            {
+                id: 9,
+                category: "生物構造 (人體系統)",
+                question: "【素養題】當我們在運動場上跑步時，呼吸頻率會不由自主地加快、心跳也會加速。關於人體呼吸與循環系統的協同運作，下列敘述何者正確？",
+                options: [
+                    "運動時肌肉細胞消耗大量氧氣並產生二氧化碳，血液中的二氧化碳濃度增加會刺激大腦呼吸中樞",
+                    "心跳加速是因為胃部蠕動過快引起的",
+                    "吸氣時，橫膈膜會向上突起，胸腔體積變大",
+                    "人體吸收氧氣的主要器官是大腸"
+                ],
+                answer: 0,
+                analysis: "運動時細胞對氧氣需求大增，代謝產生的二氧化碳增加，刺激腦部加快呼吸與心跳以加速氣體交換。吸氣時橫膈膜會『下降』使胸腔體積變大；氧氣主要在小腸被養分吸收、肺部進行氣體交換。"
+            },
+            {
+                id: 10,
+                category: "理化與熱現象 (生活應用)",
+                question: "【素養題】夏天時，我們走在戶外的柏油路上會覺得非常燙腳，而站在旁邊的草地上則感覺相對涼爽。這種現象主要牽涉到熱的傳播方式，下列敘述何者正確？",
+                options: [
+                    "柏油路吸熱快且溫度高，主要是透過熱傳導與熱輻射將熱量傳給腳底",
+                    "草地涼爽是因為草地完全不會吸收太陽光熱能",
+                    "陽光從太陽傳到地球表面主要是透過「熱對流」",
+                    "用手摸金屬製品感覺比木頭冰涼，是因為金屬的溫度絕對比木頭低"
+                ],
+                answer: 0,
+                analysis: "柏油路深色吸熱快，與腳底直接接觸時以『熱傳導』傳熱，且太陽輻射強烈。太陽熱能傳到地球是透過『輻射』。手摸金屬感覺冰涼是因為金屬導熱快、迅速帶走手部熱量，兩者溫度可能相同。"
+            },
+            {
+                id: 11,
+                category: "地球科學 (氣象與災害)",
+                question: "【素養題】每年夏秋之際，台灣常受到西北太平洋生成的「颱風」侵襲。氣象局發布海上及陸上颱風警報時，常會提醒山區慎防坍方、落石與土石流。關於颱風的特性，下列敘述何者正確？",
+                options: [
+                    "颱風中心（颱風眼）風雨交加、雷電交織，是風雨最強烈的地方",
+                    "颱風是一種低氣壓系統，在北半球呈現逆時針方向向中心旋轉流入",
+                    "颱風一旦登陸台灣山脈後，因為水氣補給充足，威力通常會變得更強大",
+                    "颱風帶來豪雨只會造成災害，對台灣的水資源完全沒有幫助"
+                ],
+                answer: 1,
+                analysis: "颱風是北半球的強烈熱帶低氣壓，氣流呈『逆時針』向中心旋轉流入。颱風眼內通常無風無雨、天氣晴朗；登陸後因失去海洋水氣供應會迅速減弱；颱風帶來的雨水雖偶有災情，卻也是台灣水庫重要的蓄水來源。"
+            },
+            {
+                id: 12,
+                category: "理化與燃燒 (實驗操作)",
+                question: "【素養題】小美在實驗室進行「氧氣的製備與性質」實驗，她利用雙氧水與二氧化錳混合製造氧氣，並將燃中帶有餘燼的木條伸入集氣瓶中。她會觀察到什麼現象？",
+                options: [
+                    "木條立刻熄滅",
+                    "木條產生爆鳴聲並熄滅",
+                    "木條上的餘燼復燃，燃燒得更旺盛",
+                    "木條毫無變化"
+                ],
+                answer: 2,
+                analysis: "氧氣具有『助燃性』。將帶有餘燼（火星）的木條放入充滿氧氣的集氣瓶中，木條會『復燃』並劇烈燃燒，這是檢驗氧氣最具代表性的實驗方法。"
+            },
+            {
+                id: 13,
+                category: "生物與遺傳 (跨領域應用)",
+                question: "【素養題】 Mendel（孟德爾）透過豌豆實驗奠定了遺傳學的基礎。人類的許多特徵（如雙眼皮、耳垂分離等）也是透過基因代代相傳。下列關於遺傳與性狀的敘述，何者正確？",
+                options: [
+                    "父母親身上所有的後天傷疤或受傷特徵，都一定會遺傳給下一代",
+                    "子女的性狀必定與父親長得一模一樣，與母親無關",
+                    "遺傳訊息主要儲存在細胞核內的染色體與 DNA 當中",
+                    "雙眼皮的父母生出來的小孩絕對不可能有單眼皮"
+                ],
+                answer: 2,
+                analysis: "細胞核內的 DNA 與染色體是遺傳物質的載體。後天的傷疤屬於環境造成的獲得性特徵，不會遺傳給下一代；父母若帶有隱性基因，雙眼皮父母也有機會生出單眼皮小孩。"
+            },
+            {
+                id: 14,
+                category: "地球科學 (水循環與環境)",
+                question: "【素養題】近年來全球氣候變遷加劇，極端氣候導致某些地區豪雨成災、某些地區面臨嚴重乾旱。關於自然界「水循環」的各項環節，下列敘述何者錯誤？",
+                options: [
+                    "海洋水吸收太陽熱能後蒸發成水蒸氣上升，是水循環能量的主要來源之一",
+                    "植物根部吸收土壤水分後，經由葉片氣孔散失到大氣中的過程稱為蒸散作用",
+                    "空氣中的水蒸氣凝結成小水滴聚集形成雲霧，屬於吸熱的物理變化",
+                    "雨水降落地面後，會透過地表逕流流回海洋，或滲入地下成為地下水"
+                ],
+                answer: 2,
+                analysis: "水蒸氣『凝結』成小水滴（液態）的過程是『放熱』而非吸熱（水氣變成冰或水釋放熱量）。其餘選項敘述皆正確。"
+            },
+            {
+                id: 15,
+                category: "理化與密度 (實驗計算)",
+                question: "【素養題】小華有一塊不規則的金屬塊，他先用電子天平測出其質量為 108 公克。接著將它完全浸入裝有 50 毫升水的量筒中，水面上升至 90 毫升。請問這塊金屬塊的密度是多少？",
+                options: [
+                    "1.2 g/cm³",
+                    "2.7 g/cm³",
+                    "3.5 g/cm³",
+                    "4.5 g/cm³"
+                ],
+                answer: 1,
+                analysis: "金屬體積 = 90 mL - 50 mL = 40 cm³（1 mL = 1 cm³）。密度 = 質量 ÷ 體積 = 108 g ÷ 40 cm³ = 2.7 g/cm³（此密度相當於鋁的密度）。"
+            },
+            {
+                id: 16,
+                category: "生物與適應 (演化生物學)",
+                question: "【素養題】達爾文在加拉巴哥群島觀察到不同島嶼上的「雀鳥」，其喙的形狀與大小各有不同，主要是用來適應島上不同的食物來源（如堅果、仙人掌或昆蟲）。這種現象說明了下列哪一項生物學概念？",
+                options: [
+                    "生物為了適應環境，主動把自己的嘴巴變形",
+                    "環境天擇與天生變異造就了不同物種的適應特徵",
+                    "所有的雀鳥吃的食物完全一模一樣",
+                    "島上的環境對雀鳥的生存沒有任何篩選作用"
+                ],
+                answer: 1,
+                analysis: "達爾文天擇說指出：族群中本來就存在個體差異（變異），當環境發生改變時，具有適應性特徵的個體容易生存並繁衍後代，久而久之形成適應特定環境的特徵。"
+            },
+            {
+                id: 17,
+                category: "理化與電學 (生活科技)",
+                question: "【素養題】小明在家中佈置LED串燈時，發現其中一顆燈泡壞了熄滅，但其他燈泡仍然繼續發亮。這種電路連接方式在日常生活中最常見，請問關於這種電路的敘述何者正確？",
+                options: [
+                    "這屬於「串聯電路」，電流只有單一通道",
+                    "這屬於「並聯電路」，有多條電流通道，其中一條斷路不影響其他路徑",
+                    "家中的所有電器都是串聯連接的",
+                    "並聯電路中，燈泡串越多顆則亮度會變得越暗"
+                ],
+                answer: 1,
+                analysis: "家庭用電與裝飾燈泡通常採用『並聯電路』，特色是各個燈泡有獨立的電流迴路，當其中一個燈泡損壞（斷路）時，其他燈泡仍可正常通電發光。"
+            },
+            {
+                id: 18,
+                category: "地球科學 (太陽系與宇宙)",
+                question: "【素養題】在浩瀚的太陽系中，有八大行星環繞著太陽運行。下列關於太陽系行星特徵的敘述，何者正確？",
+                options: [
+                    "木星是太陽系中體積與質量最大的行星，屬於類地行星",
+                    "金星表面覆蓋著厚厚的二氧化碳大氣，產生強烈的溫室效應，是表面溫度最高的行星",
+                    "火星表面呈現紅色是因為富含大量液態水",
+                    "水星距離太陽最近，因此氣候四季如春非常舒適"
+                ],
+                answer: 1,
+                analysis: "金星濃厚的二氧化碳大氣造成極端溫室效應，表面溫度高達400多度，是太陽系最熱的行星。木星是『類木行星』；火星紅色是由於表面氧化鐵（鐵鏽），並無大量液態水；水星日夜溫差極大。"
+            },
+            {
+                id: 19,
+                category: "生物與能量 (光合作用)",
+                question: "【素養題】綠色植物透過「光合作用」製造自身養分並釋放氧氣，維持了地球大氣的碳氧平衡。請問下列哪一項「不是」植物進行光合作用所必需的條件或原料？",
+                options: [
+                    "二氧化碳",
+                    "水",
+                    "葉綠素",
+                    "氧氣"
+                ],
+                answer: 3,
+                analysis: "光合作用的原料是『二氧化碳』與『水』，在『光照』與『葉綠素』的催化下進行，產物為葡萄糖與『氧氣』。因此氧氣是產物而非必需原料。"
+            },
+            {
+                id: 20,
+                category: "理化與酸鹼中和 (生活情境)",
+                question: "【素養題】阿公最近因為胃酸過多而經常感到胃灼熱，醫生建議他服用含有氫氧化鎂成分的胃藥來緩解不適。這種服用胃藥治療胃酸過多的化學原理屬於下列哪一項？",
+                options: [
+                    "氧化還原反應",
+                    "酸鹼中和反應",
+                    "金屬置換反應",
+                    "蒸發結晶反應"
+                ],
+                answer: 1,
+                analysis: "胃酸主要成分為鹽酸（酸性），胃藥多含有弱鹼性物質（如氫氧化鎂），兩者結合會進行『酸鹼中和』反應，降低胃部酸度、緩解不適。"
+            },
+            {
+                id: 21,
+                category: "生物與分類 (動物界特徵)",
+                question: "【素養題】小華在郊外踏青時觀察到四種動物：麻雀、青蛙、臺灣黑熊、台灣特有種櫻花鉤吻鮭。如果將牠們依照「體溫是否恆定」來分類，下列敘述何者正確？",
+                options: [
+                    "麻雀與台灣黑熊屬於恆溫動物",
+                    "青蛙與櫻花鉤吻鮭屬於恆溫動物",
+                    "青蛙是哺乳類，體溫會隨環境改變",
+                    "所有脊椎動物都是恆溫動物"
+                ],
+                answer: 0,
+                analysis: "鳥類（麻雀）與哺乳類（台灣黑熊）是『恆溫動物』；兩生類（青蛙）與魚類（櫻花鉤吻鮭）及爬蟲類是『變溫動物』。脊椎動物中僅鳥類與哺乳類恆溫。"
+            },
+            {
+                id: 22,
+                category: "理化與力與運動 (生活應用)",
+                question: "【素養題】小明坐在行駛中的公車上，當公車突然「緊急煞車」時，車上的乘客身體會不由自主地向前傾。這種物理現象主要是受到哪一個定律的影響？",
+                options: [
+                    "牛頓第一運動定律（慣性定律）",
+                    "牛頓第二運動定律（F=ma）",
+                    "槓桿平衡原理",
+                    "浮力原理"
+                ],
+                answer: 0,
+                analysis: "當公車緊急煞車時，乘客的身體因為『慣性』會維持原本向前行駛的運動狀態，因此會向前傾。這正是牛頓第一運動定律的最佳生活實例。"
+            },
+            {
+                id: 23,
+                category: "地球科學 (大氣與環境)",
+                question: "【素養題】關於地球大氣層的結構與溫室效應，下列敘述何者正確？",
+                options: [
+                    "大氣層中的臭氧層主要分佈在對流層，能阻擋大量紫外線保護生物",
+                    "溫室效應是完全有害的環境汙染，地球若沒有溫室效應會更好",
+                    "大氣中主要的溫室氣體包含二氧化碳、水氣與甲烷等",
+                    "天氣現象（如風雨雷電）主要發生在中氣層"
+                ],
+                answer: 2,
+                analysis: "大氣中的溫室氣體（二氧化碳、水氣、甲烷等）能鎖住地表輻射熱，維持適宜溫度（適度溫室效應是生命存活必需）。臭氧層位於『平流層』而非對流層；天氣現象皆發生在『對流層』。"
+            },
+            {
+                id: 24,
+                category: "生物與構造 (植物水分運輸)",
+                question: "【素養題】植物根部吸收的水分與礦物質，可以一路輸送到數十公尺高的樹冠頂端。請問植物體內主要負責運輸水分的維管束組織為何？",
+                options: [
+                    "韌皮部",
+                    "木質部",
+                    "形成層",
+                    "髓部"
+                ],
+                answer: 1,
+                analysis: "植物的維管束中，『木質部』主要負責由下往上輸送水分與礦物質；『韌皮部』則負責將葉片光合作用製造的養分上下輸送。"
+            },
+            {
+                id: 25,
+                category: "跨領域綜合科學 (科學探究)",
+                question: "【素養題】小華想要探討「水溫對砂糖溶解速率的影響」，他在兩個相同的燒杯中分別倒入 50 毫升的冷水（20℃）與熱水（70℃），然後各加入一塊 10 克的方糖，並記錄方糖完全溶解所需的時間。在這個實驗設計中，下列哪一項屬於需要控制的「控制變因」？",
+                options: [
+                    "水的溫度",
+                    "砂糖完全溶解的時間",
+                    "水的體積與砂糖的質量及顆粒大小",
+                    "加熱的工具"
+                ],
+                answer: 2,
+                analysis: "本實驗的『操作變因』是水溫；『應變變因』是溶解時間。為了確保實驗公平準確，必須將水的體積（50毫升）、砂糖質量（10克）與顆粒大小等條件保持完全相同，這些即為『控制變因』。"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById('current-q-num').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-category').textContent = q.category;
+            
+            // Progress bar
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+
+            document.getElementById('question-text').textContent = `${currentQuestionIndex + 1}. ${q.question}`;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = userAnswers[currentQuestionIndex] === idx;
+                const btnClass = isSelected 
+                    ? 'border-indigo-600 bg-indigo-50/80 text-indigo-950 font-semibold shadow-xs ring-2 ring-indigo-500/20' 
+                    : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 text-slate-700 bg-white';
+
+                const button = document.createElement('button');
+                button.className = `w-full text-left p-4 sm:p-4.5 rounded-2xl border transition-all flex items-start gap-3.5 cursor-pointer text-sm sm:text-base ${btnClass}`;
+                button.innerHTML = `
+                    <span class="w-6 h-6 shrink-0 rounded-full border border-slate-300 flex items-center justify-center text-xs font-bold ${isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'text-slate-500 bg-slate-50'}">${String.fromCharCode(65 + idx)}</span>
+                    <span class="leading-relaxed pt-0.5">${opt}</span>
+                `;
+                button.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(button);
+            });
+
+            // Buttons state
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            const nextBtn = document.getElementById('next-btn');
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.textContent = '交卷看成績 ✨';
+                nextBtn.className = 'px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-sm transition shadow-md shadow-emerald-200 cursor-pointer';
+            } else {
+                nextBtn.textContent = '下一題';
+                nextBtn.className = 'px-8 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition shadow-md shadow-indigo-200 cursor-pointer';
+            }
+        }
+
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+            loadQuestion();
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+
+        function submitQuiz() {
+            // Calculate score
+            let correctCount = 0;
+            questions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.answer) {
+                    correctCount++;
+                }
+            });
+
+            const score = Math.round((correctCount / questions.length) * 100);
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('final-score').textContent = score;
+
+            // Generate Analysis
+            const analysisContainer = document.getElementById('analysis-container');
+            analysisContainer.innerHTML = '';
+
+            let wrongCount = 0;
+            questions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.answer;
+
+                if (!isCorrect) {
+                    wrongCount++;
+                    const userText = userAns !== null ? `${String.fromCharCode(65 + userAns)}. ${q.options[userAns]}` : '未作答';
+                    const correctText = `${String.fromCharCode(65 + q.answer)}. ${q.options[q.answer]}`;
+
+                    const div = document.createElement('div');
+                    div.className = 'p-5 rounded-2xl border border-rose-100 bg-rose-50/40 space-y-3';
+                    div.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-rose-600 bg-rose-100/80 px-2.5 py-1 rounded-md">第 ${idx + 1} 題</span>
+                            <span class="text-xs text-slate-400">${q.category}</span>
+                        </div>
+                        <div class="text-sm font-bold text-slate-900 leading-relaxed">${q.question}</div>
+                        <div class="text-xs sm:text-sm space-y-1.5 pt-1 border-t border-rose-100/60">
+                            <div class="text-rose-600 font-medium">❌ 您的回答：${userText}</div>
+                            <div class="text-emerald-700 font-medium">✔️ 正確答案：${correctText}</div>
+                            <div class="text-slate-600 mt-2 bg-white/80 p-3.5 rounded-xl border border-slate-100 leading-relaxed">
+                                💡 <strong>素養觀念解析：</strong>${q.analysis}
+                            </div>
+                        </div>
+                    `;
+                    analysisContainer.appendChild(div);
+                }
+            });
+
+            document.getElementById('wrong-count-badge').textContent = `錯題數：${wrongCount} 題`;
+
+            if (wrongCount === 0) {
+                analysisContainer.innerHTML = `
+                    <div class="p-8 text-center bg-emerald-50 text-emerald-800 rounded-2xl border border-emerald-100 font-medium space-y-2">
+                        <div class="text-2xl">🎉</div>
+                        <div class="font-bold text-base">太強了！ 25 題全數答對！</div>
+                        <p class="text-xs text-emerald-600">您在自然科學與素養題型上具備頂尖實力，應試私中絕對金榜題名！</p>
+                    </div>
+                `;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = new Array(questions.length).fill(null);
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
